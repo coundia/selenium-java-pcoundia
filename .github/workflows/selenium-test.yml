@@ -22,8 +22,8 @@ jobs:
         image: selenium/node-chrome:latest
         env:
           HUB_HOST: selenium-hub
-        depends_on:
-          - selenium-hub
+        ports:
+          - 5555:5555
 
     steps:
       - name: Checkout Backend Repository
@@ -72,6 +72,13 @@ jobs:
         run: |
           echo "Waiting for frontend to start..."
           sleep 20  # Wait for Angular app to be fully ready
+
+      - name: Wait for Selenium Hub to be ready
+        run: |
+          echo "Waiting for Selenium Hub to be ready..."
+          while ! nc -z selenium-hub 4444; do
+            sleep 1
+          done
 
       - name: Run Selenium Tests
         run: mvn test
