@@ -70,12 +70,12 @@ jobs:
         run: |
           cd frontend
           npm run build
-          npx http-server -p 4200 dist/frontend &
+          npx http-server -p 4200 -a 0.0.0.0 dist/frontend &
 
       - name: Wait for Angular App to be Ready
         run: |
           echo "Waiting for Frontend to be ready..."
-          until curl -sSL "http://localhost:4200" | grep -q "<title>"; do
+          until curl -sSL "http://172.18.0.1:4200" | grep -q "<title>"; do
             sleep 5
           done
         timeout-minutes: 2
