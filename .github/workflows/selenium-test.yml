@@ -41,6 +41,14 @@ jobs:
       - name: Start Backend Application
         run: mvn spring-boot:run &
 
+      - name: Wait for Backend to be Ready
+        run: |
+          echo "Waiting for Backend to be ready..."
+          until curl -sSL "http://localhost:8080/actuator/health" | grep '"status":"UP"'; do
+            sleep 5
+          done
+        timeout-minutes: 2
+
       - name: Checkout Frontend Repository
         uses: actions/checkout@v4
         with:
@@ -58,20 +66,29 @@ jobs:
           rm -rf node_modules package-lock.json
           npm install
 
-      - name: Start Angular App
+      - name: Build and Start Angular App
         run: |
           cd frontend
           npm run build
           npx http-server -p 4200 dist/frontend &
 
-      - name: Wait for Selenium Hub to be ready
+      - name: Wait for Angular App to be Ready
         run: |
-          echo "Waiting for Selenium Hub to be ready..."
-          until curl -sSL "http://localhost:4444/status" | grep "\"ready\": true"; do
+          echo "Waiting for Frontend to be ready..."
+          until curl -sSL "http://localhost:4200" | grep -q "<title>"; do
             sleep 5
           done
+        timeout-minutes: 2
+
+      - name: Wait for Selenium Hub to be Ready
+        run: |
+          echo "Waiting for Selenium Hub to be ready..."
+          until curl -sSL "http://localhost:4444/status" | grep '"ready":true'; do
+            sleep 5
+          done
+        timeout-minutes: 2
 
       - name: Run Selenium Tests
-        run: |
-          export SELENIUM_HUB_URL="http://localhost:4444/wd/hub"
-          mvn test
+        run: mvn test
+        env:
+          SELENIUM_HUB_URL: "http://localhost:4444/wd/hub"
