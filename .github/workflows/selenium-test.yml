@@ -37,48 +37,48 @@ jobs:
 
       - name: Install Maven dependencies
         run: mvn clean install -DskipTests
-#
-#      - name: Start Backend Application
-#        run: mvn spring-boot:run &
-#
-#      - name: Wait for Backend to be Ready
-#        run: |
-#          echo "Waiting for Backend to be ready..."
-#          until curl -sSL "http://localhost:8080/actuator/health" | grep '"status":"UP"'; do
-#            sleep 5
-#          done
-#        timeout-minutes: 2
 
-#      - name: Checkout Frontend Repository
-#        uses: actions/checkout@v4
-#        with:
-#          repository: "coundia/astro_angular_tailwindcss_portfolio"
-#          path: frontend
-#
-#      - name: Install Node.js
-#        uses: actions/setup-node@v3
-#        with:
-#          node-version: 18
-#
-#      - name: Install Angular dependencies
-#        run: |
-#          cd frontend
-#          rm -rf node_modules package-lock.json
-#          npm install
-#
+      - name: Start Backend Application
+        run: mvn spring-boot:run &
+
+      - name: Wait for Backend to be Ready
+        run: |
+          echo "Waiting for Backend to be ready..."
+          until curl -sSL "http://localhost:8080/actuator/health" | grep '"status":"UP"'; do
+            sleep 5
+          done
+        timeout-minutes: 2
+
+      - name: Checkout Frontend Repository
+        uses: actions/checkout@v4
+        with:
+          repository: "coundia/astro_angular_tailwindcss_portfolio"
+          path: frontend
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install Angular dependencies
+        run: |
+          cd frontend
+          rm -rf node_modules package-lock.json
+          npm install
+
 #      - name: Build and Start Angular App
 #        run: |
 #          cd frontend
 #          npm run build
 #          npx http-server -p 4200 -a 0.0.0.0 dist/frontend &
-#
-#      - name: Wait for Angular App to be Ready
-#        run: |
-#          echo "Waiting for Frontend to be ready..."
-#          until curl -sSL "http://172.18.0.1:4200" | grep -q "<title>"; do
-#            sleep 5
-#          done
-#        timeout-minutes: 2
+
+      - name: Wait for Angular App to be Ready
+        run: |
+          echo "Waiting for Frontend to be ready..."
+          until curl -sSL "https://test.pcoundia.com" | grep -q "<title>"; do
+            sleep 5
+          done
+        timeout-minutes: 2
 
       - name: Wait for Selenium Hub to be Ready
         run: |
@@ -86,7 +86,7 @@ jobs:
           until curl -sSL "http://localhost:4444/status" | grep '"ready":true'; do
             sleep 5
           done
-        timeout-minutes: 10
+        timeout-minutes: 5
 
       - name: Run Selenium Tests
         run: mvn test
