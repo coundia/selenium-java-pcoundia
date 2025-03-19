@@ -1,0 +1,67 @@
+name: Selenium Tests with Angular Frontend
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  selenium-test:
+    runs-on: ubuntu-latest
+
+    services:
+      selenium-hub:
+        image: selenium/hub:latest
+        ports:
+          - 4444:4444
+
+      chrome-node:
+        image: selenium/node-chrome:latest
+        env:
+          HUB_HOST: selenium-hub
+        depends_on:
+          - selenium-hub
+
+    steps:
+      - name: Checkout Backend Repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Install Maven dependencies
+        run: mvn clean install -DskipTests
+
+      - name: Start Backend Application
+        run: mvn spring-boot:run &
+
+      - name: Checkout Frontend Repository
+        uses: actions/checkout@v4
+        with:
+          repository: "coundia/astro_angular_tailwindcss_portfolio"
+          path: frontend
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install Angular dependencies
+        run: |
+          cd frontend
+          npm install
+
+      - name: Start Angular App
+        run: |
+          cd frontend
+          npm run build
+          npx http-server -p 4200 dist/frontend &
+
+      - name: Run Selenium Tests
+        run: mvn test
