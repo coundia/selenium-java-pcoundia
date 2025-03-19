@@ -2,7 +2,7 @@ version: "3"
 services:
   selenium-hub:
     image: selenium/hub:latest
-    container_name: selenium-hub
+    container_name: pcoundia-selenium-hub
     ports:
       - "4444:4444"
     environment:
@@ -12,6 +12,7 @@ services:
 
   chrome:
     image: selenium/node-chrome:latest
+    container_name: pcoundia-node-chrome
     depends_on:
       - selenium-hub
     environment:

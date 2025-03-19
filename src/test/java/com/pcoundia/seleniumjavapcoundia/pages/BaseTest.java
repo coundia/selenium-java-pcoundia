@@ -19,6 +19,8 @@ public class BaseTest {
     @BeforeEach
     void setup() throws Exception {
         driver = WebDriverFactory.createWebDriver(seleniumUrl);
+        System.out.println("Driver created");
+        System.out.println("url: " + url);
         homePage = new HomePage(driver,url);
     }
 
