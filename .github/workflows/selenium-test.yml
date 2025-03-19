@@ -49,36 +49,36 @@ jobs:
 #          done
 #        timeout-minutes: 2
 
-      - name: Checkout Frontend Repository
-        uses: actions/checkout@v4
-        with:
-          repository: "coundia/astro_angular_tailwindcss_portfolio"
-          path: frontend
-
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - name: Install Angular dependencies
-        run: |
-          cd frontend
-          rm -rf node_modules package-lock.json
-          npm install
-
-      - name: Build and Start Angular App
-        run: |
-          cd frontend
-          npm run build
-          npx http-server -p 4200 -a 0.0.0.0 dist/frontend &
-
-      - name: Wait for Angular App to be Ready
-        run: |
-          echo "Waiting for Frontend to be ready..."
-          until curl -sSL "http://172.18.0.1:4200" | grep -q "<title>"; do
-            sleep 5
-          done
-        timeout-minutes: 2
+#      - name: Checkout Frontend Repository
+#        uses: actions/checkout@v4
+#        with:
+#          repository: "coundia/astro_angular_tailwindcss_portfolio"
+#          path: frontend
+#
+#      - name: Install Node.js
+#        uses: actions/setup-node@v3
+#        with:
+#          node-version: 18
+#
+#      - name: Install Angular dependencies
+#        run: |
+#          cd frontend
+#          rm -rf node_modules package-lock.json
+#          npm install
+#
+#      - name: Build and Start Angular App
+#        run: |
+#          cd frontend
+#          npm run build
+#          npx http-server -p 4200 -a 0.0.0.0 dist/frontend &
+#
+#      - name: Wait for Angular App to be Ready
+#        run: |
+#          echo "Waiting for Frontend to be ready..."
+#          until curl -sSL "http://172.18.0.1:4200" | grep -q "<title>"; do
+#            sleep 5
+#          done
+#        timeout-minutes: 2
 
       - name: Wait for Selenium Hub to be Ready
         run: |
