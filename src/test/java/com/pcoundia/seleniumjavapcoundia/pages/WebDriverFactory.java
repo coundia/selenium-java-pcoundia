@@ -10,8 +10,8 @@ import java.time.Duration;
 
 public class WebDriverFactory {
 
-    public static WebDriver createWebDriver() throws MalformedURLException {
-        URL seleniumGridUrl = new URL("http://localhost:4444/wd/hub");
+    public static WebDriver createWebDriver(String url) throws MalformedURLException {
+        URL seleniumGridUrl = new URL(url);
         WebDriver driver = new RemoteWebDriver(seleniumGridUrl, new ChromeOptions());
         driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
         return driver;

@@ -1,13 +1,16 @@
 package com.pcoundia.seleniumjavapcoundia.pages;
 
 import org.openqa.selenium.WebDriver;
+import org.springframework.beans.factory.annotation.Value;
 
 public class HomePage {
 
-    private WebDriver driver;
+    private final WebDriver driver;
+    private final String url;
 
-    public HomePage(WebDriver driver) {
+    public HomePage(WebDriver driver, String url) {
         this.driver = driver;
+        this.url = url;
     }
 
     public String getPageTitle() {
@@ -15,10 +18,10 @@ public class HomePage {
     }
 
     public void navigateToHomePage() {
-        driver.get("https://www.pcoundia.com");
+        driver.get(this.url);
     }
 
-    public boolean isTitleCorrect() {
-        return getPageTitle().contains("Papa Coundiqa");
+    public boolean isTitleCorrect(String title) {
+        return getPageTitle().contains(title);
     }
 }
