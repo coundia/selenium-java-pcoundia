@@ -86,7 +86,7 @@ jobs:
           until curl -sSL "http://localhost:4444/status" | grep '"ready":true'; do
             sleep 5
           done
-        timeout-minutes: 2
+        timeout-minutes: 10
 
       - name: Run Selenium Tests
         run: mvn test
